@@ -1,0 +1,28 @@
+diff --git a/Makefile.in b/Makefile.in
+index 212e239af..8fc35182d 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -351,11 +351,11 @@ tests/%: tests/%.cc $(OBJS)
+ 	$(CXX) -o $@ $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) $<
+ 
+ build-zenmap: $(ZENMAPDIR)/pyproject.toml $(ZENMAPDIR)/zenmapCore/Version.py
+-	$(PYTHON) -m build $(ZENMAPDIR)/
++	$(PYTHON) -m build --wheel --no-isolation $(ZENMAPDIR)/
+ 
+ install-zenmap: $(ZENMAPDIR)/pyproject.toml
+ 	$(INSTALL) -d $(DESTDIR)$(bindir) $(DESTDIR)$(mandir)/man1 $(DESTDIR)$(deskdir)
+-	$(PYTHON) -m pip install $(ZENMAPDIR)/ $(if $(DESTDIR),--root "$(DESTDIR)")
++	$(PYTHON) -m pip install $(ZENMAPDIR)/dist/*.whl --prefix $(prefix)
+ 	$(INSTALL) -c -m 644 docs/zenmap.1 $(DESTDIR)$(mandir)/man1/
+ 	$(INSTALL) -c -m 644 $(ZENMAPDIR)/install_scripts/unix/*.desktop $(DESTDIR)$(deskdir)
+ # Create a symlink from nmapfe to zenmap if nmapfe doesn't exist or is
+@@ -374,7 +374,8 @@ build-nping: $(NPINGDIR)/Makefile build-nbase build-nsock build-netutil $(NPINGD
+ 
+ install-ndiff:
+ 	$(INSTALL) -d $(DESTDIR)$(bindir) $(DESTDIR)$(mandir)/man1
+-	$(PYTHON) -m pip install $(NDIFFDIR)/ $(if $(DESTDIR),--root "$(DESTDIR)")
++	$(PYTHON) -m build --wheel --no-isolation $(NDIFFDIR)/
++	$(PYTHON) -m pip install $(NDIFFDIR)/dist/*.whl --prefix $(prefix)
+ 	$(INSTALL) -c -m 644 $(NDIFFDIR)/docs/ndiff.1 $(DESTDIR)$(mandir)/man1/
+ 
+ NSE_FILES = scripts/script.db scripts/*.nse
